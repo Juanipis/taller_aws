@@ -11,6 +11,7 @@ class AWSCredentials:
     def __init__(self):
         self.access_key_id = os.getenv('AWS_ACCES_KEY_ID')
         self.secret_key = os.getenv('AWS_SECRET_ACCESS_KEY')
+        self.bucket_name = os.getenv('BUCKET_NAME')
 
 def main(aws_credentials : AWSCredentials):
     parser = argparse.ArgumentParser(description='Retrieve and save Pokemon data from PokeAPI')
@@ -24,7 +25,7 @@ def main(aws_credentials : AWSCredentials):
     print(f'Successfully retrieved data for {args.pokemon_name}')
 
     s3 = boto3.client('s3', aws_access_key_id=aws_credentials.access_key_id, aws_secret_access_key=aws_credentials.secret_key)
-    bucket_name = 'eia-so-bucket-dev'
+    bucket_name = aws_credentials.bucket_name
     key = f'natynaro-juanipis/pokemon/{args.pokemon_name}/{datetime.datetime.now().strftime("%Y%m%d%H%M%S")}.json'
     #Create json file
     with open(f'{args.pokemon_name}.json', 'w') as outfile:
